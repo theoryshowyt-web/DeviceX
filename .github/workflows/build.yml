@@ -1,0 +1,214 @@
+name: Build APK
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: 17 }
+      - uses: android-actions/setup-android@v3
+      - uses: gradle/actions/setup-gradle@v4
+        with: { gradle-version: 8.7 }
+      - name: Create Android project
+        run: |
+          P="$RUNNER_TEMP/DeviceX"
+          mkdir -p "$P/app/src/main/assets"
+          cp "$GITHUB_WORKSPACE/index.html" "$P/app/src/main/assets/index.html"
+          :
+          cat > "$P/settings.gradle" <<'XEOFX'
+          pluginManagement { repositories { google(); mavenCentral(); gradlePluginPortal() } }
+          dependencyResolutionManagement { repositories { google(); mavenCentral() } }
+          rootProject.name = "DeviceX"
+          include ':app'
+          XEOFX
+          :
+          cat > "$P/build.gradle" <<'XEOFX'
+          plugins { id 'com.android.application' version '8.5.2' apply false }
+          XEOFX
+          :
+          cat > "$P/gradle.properties" <<'XEOFX'
+          android.useAndroidX=true
+          org.gradle.jvmargs=-Xmx2g
+          XEOFX
+          mkdir -p "$P/app"
+          cat > "$P/app/build.gradle" <<'XEOFX'
+          plugins { id 'com.android.application' }
+          android {
+              namespace 'com.devicex.app'
+              compileSdk 34
+              defaultConfig {
+                  applicationId 'com.devicex.app'
+                  minSdk 24
+                  targetSdk 34
+                  versionCode 1
+                  versionName '1.0'
+              }
+              compileOptions {
+                  sourceCompatibility JavaVersion.VERSION_17
+                  targetCompatibility JavaVersion.VERSION_17
+              }
+          }
+          dependencies { implementation 'androidx.webkit:webkit:1.11.0' }
+          XEOFX
+          mkdir -p "$P/app/src/main"
+          cat > "$P/app/src/main/AndroidManifest.xml" <<'XEOFX'
+          <?xml version="1.0" encoding="utf-8"?>
+          <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+              <uses-permission android:name="android.permission.INTERNET"/>
+              <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+              <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+              <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+              <uses-permission android:name="android.permission.CAMERA"/>
+              <uses-feature android:name="android.hardware.camera" android:required="false"/>
+              <uses-feature android:name="android.hardware.microphone" android:required="false"/>
+              <application android:label="DeviceX" android:icon="@drawable/ic_launcher" android:roundIcon="@drawable/ic_launcher" android:theme="@style/AppTheme" android:allowBackup="false">
+                  <activity android:name=".MainActivity" android:exported="true" android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout">
+                      <intent-filter>
+                          <action android:name="android.intent.action.MAIN"/>
+                          <category android:name="android.intent.category.LAUNCHER"/>
+                      </intent-filter>
+                  </activity>
+              </application>
+          </manifest>
+          XEOFX
+          mkdir -p "$P/app/src/main/res/values"
+          cat > "$P/app/src/main/res/values/themes.xml" <<'XEOFX'
+          <resources>
+              <style name="AppTheme" parent="android:Theme.Material.NoActionBar">
+                  <item name="android:windowBackground">#050509</item>
+                  <item name="android:statusBarColor">#050509</item>
+                  <item name="android:navigationBarColor">#050509</item>
+              </style>
+          </resources>
+          XEOFX
+          mkdir -p "$P/app/src/main/res/drawable"
+          cat > "$P/app/src/main/res/drawable/ic_launcher.xml" <<'XEOFX'
+          <vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="96dp" android:height="96dp" android:viewportWidth="96" android:viewportHeight="96">
+              <path android:fillColor="#0B0714" android:pathData="M20,0h56a20,20 0 0 1 20,20v56a20,20 0 0 1 -20,20h-56a20,20 0 0 1 -20,-20v-56a20,20 0 0 1 20,-20z"/>
+              <path android:fillColor="#D9B45A" android:pathData="M48,18L74,48L48,78L22,48z"/>
+              <path android:fillColor="#8B5CF6" android:pathData="M48,32L62,48L48,64L34,48z"/>
+          </vector>
+          XEOFX
+          mkdir -p "$P/app/src/main/java/com/devicex/app"
+          cat > "$P/app/src/main/java/com/devicex/app/MainActivity.java" <<'XEOFX'
+          package com.devicex.app;
+
+          import android.Manifest;
+          import android.app.Activity;
+          import android.content.Intent;
+          import android.content.IntentFilter;
+          import android.content.pm.PackageManager;
+          import android.os.BatteryManager;
+          import android.os.Bundle;
+          import android.view.View;
+          import android.webkit.JavascriptInterface;
+          import android.webkit.PermissionRequest;
+          import android.webkit.WebChromeClient;
+          import android.webkit.WebResourceRequest;
+          import android.webkit.WebResourceResponse;
+          import android.webkit.WebSettings;
+          import android.webkit.WebView;
+          import android.webkit.WebViewClient;
+          import androidx.webkit.WebViewAssetLoader;
+          import org.json.JSONObject;
+          import java.util.ArrayList;
+          import java.util.List;
+
+          public class MainActivity extends Activity {
+              private WebView web;
+              private PermissionRequest pending;
+
+              @Override
+              protected void onCreate(Bundle b) {
+                  super.onCreate(b);
+                  web = new WebView(this);
+                  setContentView(web);
+                  WebSettings s = web.getSettings();
+                  s.setJavaScriptEnabled(true);
+                  s.setDomStorageEnabled(true);
+                  s.setMediaPlaybackRequiresUserGesture(false);
+                  final WebViewAssetLoader loader = new WebViewAssetLoader.Builder()
+                          .addPathHandler("/assets/", new WebViewAssetLoader.AssetsPathHandler(this)).build();
+                  web.setWebViewClient(new WebViewClient() {
+                      @Override
+                      public WebResourceResponse shouldInterceptRequest(WebView v, WebResourceRequest r) {
+                          return loader.shouldInterceptRequest(r.getUrl());
+                      }
+                  });
+                  web.setWebChromeClient(new WebChromeClient() {
+                      @Override
+                      public void onPermissionRequest(final PermissionRequest r) {
+                          runOnUiThread(new Runnable() { public void run() { handle(r); } });
+                      }
+                  });
+                  web.addJavascriptInterface(new Bridge(), "DeviceXNative");
+                  web.loadUrl("https://appassets.androidplatform.net/assets/index.html");
+              }
+
+              private void handle(PermissionRequest r) {
+                  List<String> need = new ArrayList<>();
+                  for (String res : r.getResources()) {
+                      if (PermissionRequest.RESOURCE_AUDIO_CAPTURE.equals(res)
+                              && checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED)
+                          need.add(Manifest.permission.RECORD_AUDIO);
+                      if (PermissionRequest.RESOURCE_VIDEO_CAPTURE.equals(res)
+                              && checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
+                          need.add(Manifest.permission.CAMERA);
+                  }
+                  if (need.isEmpty()) { r.grant(r.getResources()); return; }
+                  pending = r;
+                  requestPermissions(need.toArray(new String[0]), 1);
+              }
+
+              @Override
+              public void onRequestPermissionsResult(int code, String[] perms, int[] results) {
+                  if (pending == null) return;
+                  boolean ok = results.length > 0;
+                  for (int x : results) if (x != PackageManager.PERMISSION_GRANTED) ok = false;
+                  if (ok) pending.grant(pending.getResources()); else pending.deny();
+                  pending = null;
+              }
+
+              private class Bridge {
+                  @JavascriptInterface
+                  public String getBattery() {
+                      try {
+                          Intent i = registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+                          if (i == null) return null;
+                          int level = i.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+                          int scale = i.getIntExtra(BatteryManager.EXTRA_SCALE, 100);
+                          int st = i.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+                          int hl = i.getIntExtra(BatteryManager.EXTRA_HEALTH, 1);
+                          String[] health = {"Unknown", "Unknown", "Good", "Overheat", "Dead", "Over voltage", "Failure", "Cold"};
+                          JSONObject o = new JSONObject();
+                          o.put("level", level * 100 / scale);
+                          o.put("charging", st == BatteryManager.BATTERY_STATUS_CHARGING || st == BatteryManager.BATTERY_STATUS_FULL);
+                          o.put("health", health[hl >= 0 && hl < health.length ? hl : 0]);
+                          o.put("temperature_C", i.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0) / 10.0);
+                          o.put("voltage_mV", i.getIntExtra(BatteryManager.EXTRA_VOLTAGE, 0));
+                          String tech = i.getStringExtra(BatteryManager.EXTRA_TECHNOLOGY);
+                          o.put("technology", tech == null ? "" : tech);
+                          return o.toString();
+                      } catch (Exception e) { return null; }
+                  }
+
+                  @JavascriptInterface
+                  public void setFullscreen(final boolean on) {
+                      runOnUiThread(new Runnable() {
+                          public void run() {
+                              getWindow().getDecorView().setSystemUiVisibility(on
+                                      ? View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                      : View.SYSTEM_UI_FLAG_VISIBLE);
+                          }
+                      });
+                  }
+              }
+          }
+          XEOFX
+      - run: gradle -p "$RUNNER_TEMP/DeviceX" assembleDebug
+      - uses: actions/upload-artifact@v4
+        with:
+          name: DeviceX-apk
+          path: ${{ runner.temp }}/DeviceX/app/build/outputs/apk/debug/app-debug.apk
