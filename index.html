@@ -1,0 +1,4106 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="DeviceCare - Professional Device Health Diagnostic"
+    >
+
+    <title>DeviceCare — Device Health</title>
+
+    <style>
+        /* =========================================================
+           DEVICECARE
+           BLACK • PURPLE • GOLD • GLASS
+        ========================================================= */
+
+        :root {
+            --bg: #050509;
+            --bg2: #0b0714;
+
+            --glass: rgba(255,255,255,0.055);
+            --glass-strong: rgba(255,255,255,0.09);
+
+            --border: rgba(255,255,255,0.12);
+            --gold: #d9b45a;
+            --gold-light: #ffe7a0;
+
+            --purple: #8b5cf6;
+            --purple-light: #b58cff;
+
+            --text: #f8f7ff;
+            --muted: #9d9aaa;
+
+            --green: #4ade80;
+            --red: #fb7185;
+            --blue: #60a5fa;
+
+            --radius: 24px;
+
+            --shadow:
+                0 20px 60px rgba(0,0,0,0.45);
+
+            --glow:
+                0 0 45px rgba(139,92,246,0.16);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+
+            font-family:
+                Inter,
+                Segoe UI,
+                Arial,
+                sans-serif;
+
+            color: var(--text);
+
+            background:
+                radial-gradient(
+                    circle at 10% 10%,
+                    rgba(139,92,246,0.18),
+                    transparent 28%
+                ),
+                radial-gradient(
+                    circle at 90% 15%,
+                    rgba(217,180,90,0.11),
+                    transparent 25%
+                ),
+                radial-gradient(
+                    circle at 50% 100%,
+                    rgba(139,92,246,0.12),
+                    transparent 30%
+                ),
+                linear-gradient(
+                    135deg,
+                    var(--bg),
+                    var(--bg2)
+                );
+
+            overflow-x: hidden;
+        }
+
+        /* =========================================================
+           BACKGROUND
+        ========================================================= */
+
+        body::before {
+            content: "";
+
+            position: fixed;
+            inset: 0;
+
+            pointer-events: none;
+
+            background:
+                linear-gradient(
+                    rgba(255,255,255,0.018) 1px,
+                    transparent 1px
+                ),
+                linear-gradient(
+                    90deg,
+                    rgba(255,255,255,0.018) 1px,
+                    transparent 1px
+                );
+
+            background-size: 55px 55px;
+
+            mask-image:
+                linear-gradient(
+                    to bottom,
+                    black,
+                    transparent 85%
+                );
+
+            z-index: -1;
+        }
+
+        .orb {
+            position: fixed;
+
+            width: 300px;
+            height: 300px;
+
+            border-radius: 50%;
+
+            filter: blur(90px);
+
+            opacity: 0.14;
+
+            pointer-events: none;
+
+            z-index: -1;
+        }
+
+        .orb.one {
+            top: 10%;
+            left: -100px;
+            background: var(--purple);
+        }
+
+        .orb.two {
+            right: -100px;
+            top: 40%;
+            background: var(--gold);
+        }
+
+        /* =========================================================
+           HEADER
+        ========================================================= */
+
+        header {
+            position: sticky;
+            top: 0;
+
+            z-index: 100;
+
+            padding: 18px 5%;
+
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+
+            background: rgba(5,5,9,0.68);
+
+            border-bottom:
+                1px solid rgba(255,255,255,0.07);
+        }
+
+        .nav {
+            max-width: 1450px;
+            margin: auto;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            font-weight: 800;
+            font-size: 21px;
+
+            letter-spacing: 0.5px;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 14px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(139,92,246,0.45),
+                    rgba(217,180,90,0.25)
+                );
+
+            border:
+                1px solid rgba(255,255,255,0.16);
+
+            box-shadow:
+                0 0 30px rgba(139,92,246,0.22);
+        }
+
+        .logo-icon span {
+            font-size: 21px;
+        }
+
+        .logo-name {
+            background:
+                linear-gradient(
+                    90deg,
+                    white,
+                    var(--gold-light)
+                );
+
+            -webkit-background-clip: text;
+            background-clip: text;
+
+            color: transparent;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .glass-button {
+            border: 1px solid var(--border);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(255,255,255,0.08),
+                    rgba(255,255,255,0.025)
+                );
+
+            color: var(--text);
+
+            padding: 11px 16px;
+
+            border-radius: 14px;
+
+            cursor: pointer;
+
+            backdrop-filter: blur(18px);
+
+            transition:
+                0.25s ease;
+
+            font-size: 14px;
+        }
+
+        .glass-button:hover {
+            transform: translateY(-2px);
+
+            border-color:
+                rgba(217,180,90,0.45);
+
+            box-shadow:
+                0 10px 30px rgba(0,0,0,0.3),
+                0 0 25px rgba(217,180,90,0.08);
+        }
+
+        .language-wrap {
+            position: relative;
+        }
+
+        .language-menu {
+            position: absolute;
+
+            top: calc(100% + 10px);
+            right: 0;
+
+            width: 220px;
+
+            padding: 10px;
+
+            border-radius: 20px;
+
+            background:
+                rgba(12,10,20,0.94);
+
+            border:
+                1px solid rgba(255,255,255,0.12);
+
+            box-shadow:
+                0 25px 70px rgba(0,0,0,0.55);
+
+            backdrop-filter: blur(25px);
+
+            display: none;
+        }
+
+        .language-menu.show {
+            display: block;
+            animation: menuIn 0.2s ease;
+        }
+
+        @keyframes menuIn {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .language-option {
+            width: 100%;
+
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            padding: 11px 12px;
+
+            border: 0;
+
+            background: transparent;
+
+            color: var(--text);
+
+            border-radius: 12px;
+
+            cursor: pointer;
+
+            text-align: left;
+
+            transition: 0.2s;
+        }
+
+        .language-option:hover {
+            background:
+                rgba(139,92,246,0.13);
+        }
+
+        /* =========================================================
+           MAIN
+        ========================================================= */
+
+        main {
+            width: min(1450px, 90%);
+
+            margin: 0 auto;
+
+            padding:
+                70px 0
+                100px;
+        }
+
+        /* =========================================================
+           HERO
+        ========================================================= */
+
+        .hero {
+            display: grid;
+
+            grid-template-columns:
+                1.2fr
+                0.8fr;
+
+            gap: 40px;
+
+            align-items: center;
+
+            margin-bottom: 55px;
+        }
+
+        .hero-content {
+            max-width: 780px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+
+            align-items: center;
+            gap: 8px;
+
+            padding: 8px 13px;
+
+            border-radius: 100px;
+
+            background:
+                rgba(139,92,246,0.09);
+
+            border:
+                1px solid rgba(139,92,246,0.22);
+
+            color: var(--purple-light);
+
+            font-size: 13px;
+
+            margin-bottom: 20px;
+        }
+
+        .eyebrow-dot {
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: var(--green);
+
+            box-shadow:
+                0 0 15px var(--green);
+        }
+
+        h1 {
+            font-size:
+                clamp(42px, 6vw, 78px);
+
+            line-height: 0.98;
+
+            letter-spacing: -3px;
+
+            margin-bottom: 24px;
+        }
+
+        .gradient-title {
+            background:
+                linear-gradient(
+                    100deg,
+                    #ffffff 10%,
+                    #d8c7ff 45%,
+                    var(--gold-light) 90%
+                );
+
+            -webkit-background-clip: text;
+            background-clip: text;
+
+            color: transparent;
+        }
+
+        .hero-text {
+            max-width: 650px;
+
+            color: var(--muted);
+
+            font-size: 17px;
+
+            line-height: 1.8;
+
+            margin-bottom: 28px;
+        }
+
+        .hero-buttons {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 12px;
+        }
+
+        .primary-button {
+            padding: 15px 22px;
+
+            border-radius: 15px;
+
+            border:
+                1px solid
+                rgba(255,255,255,0.15);
+
+            color: #08070a;
+
+            font-weight: 800;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--gold-light),
+                    var(--gold)
+                );
+
+            cursor: pointer;
+
+            box-shadow:
+                0 12px 35px rgba(217,180,90,0.15);
+
+            transition: 0.25s;
+        }
+
+        .primary-button:hover {
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 18px 45px
+                rgba(217,180,90,0.24);
+        }
+
+        /* =========================================================
+           QUICK STATUS
+        ========================================================= */
+
+        .status-card {
+            position: relative;
+
+            min-height: 350px;
+
+            padding: 28px;
+
+            border-radius: 30px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,255,255,0.09),
+                    rgba(255,255,255,0.025)
+                );
+
+            border:
+                1px solid rgba(255,255,255,0.12);
+
+            box-shadow:
+                var(--shadow),
+                var(--glow);
+
+            backdrop-filter: blur(30px);
+
+            overflow: hidden;
+        }
+
+        .status-card::before {
+            content: "";
+
+            position: absolute;
+
+            width: 230px;
+            height: 230px;
+
+            right: -80px;
+            top: -80px;
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(217,180,90,0.23),
+                    transparent 70%
+                );
+        }
+
+        .status-top {
+            display: flex;
+
+            align-items: center;
+            justify-content: space-between;
+
+            margin-bottom: 30px;
+        }
+
+        .status-label {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .status-badge {
+            padding: 7px 11px;
+
+            border-radius: 100px;
+
+            font-size: 12px;
+
+            background:
+                rgba(74,222,128,0.09);
+
+            color: var(--green);
+
+            border:
+                1px solid rgba(74,222,128,0.15);
+        }
+
+        .score {
+            display: flex;
+            align-items: baseline;
+            gap: 7px;
+
+            margin-bottom: 8px;
+        }
+
+        .score-number {
+            font-size: 75px;
+
+            font-weight: 800;
+
+            letter-spacing: -5px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    white,
+                    var(--gold-light)
+                );
+
+            -webkit-background-clip: text;
+            background-clip: text;
+
+            color: transparent;
+        }
+
+        .score-percent {
+            color: var(--muted);
+            font-size: 18px;
+        }
+
+        .score-description {
+            color: var(--muted);
+
+            line-height: 1.6;
+
+            margin-bottom: 25px;
+        }
+
+        .progress {
+            width: 100%;
+            height: 9px;
+
+            border-radius: 100px;
+
+            background:
+                rgba(255,255,255,0.07);
+
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            width: 0%;
+
+            height: 100%;
+
+            border-radius: inherit;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    var(--purple),
+                    var(--gold)
+                );
+
+            box-shadow:
+                0 0 18px
+                rgba(139,92,246,0.4);
+
+            transition:
+                width 0.5s ease;
+        }
+
+        .status-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 9px;
+
+            margin-top: 22px;
+        }
+
+        .mini-status {
+            padding: 12px;
+
+            border-radius: 14px;
+
+            background:
+                rgba(255,255,255,0.035);
+
+            border:
+                1px solid rgba(255,255,255,0.06);
+
+            text-align: center;
+        }
+
+        .mini-status strong {
+            display: block;
+
+            font-size: 17px;
+
+            margin-bottom: 3px;
+        }
+
+        .mini-status span {
+            font-size: 10px;
+
+            color: var(--muted);
+        }
+
+        /* =========================================================
+           SECTION HEADER
+        ========================================================= */
+
+        .section-heading {
+            display: flex;
+
+            justify-content: space-between;
+            align-items: end;
+
+            gap: 20px;
+
+            margin:
+                80px 0
+                28px;
+        }
+
+        .section-heading h2 {
+            font-size: 30px;
+
+            letter-spacing: -1px;
+        }
+
+        .section-heading p {
+            color: var(--muted);
+
+            font-size: 14px;
+
+            max-width: 450px;
+
+            line-height: 1.6;
+        }
+
+        /* =========================================================
+           TEST CARDS
+        ========================================================= */
+
+        .tests-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 15px;
+        }
+
+        .test-card {
+            position: relative;
+
+            min-height: 220px;
+
+            padding: 23px;
+
+            border-radius: var(--radius);
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,255,255,0.075),
+                    rgba(255,255,255,0.025)
+                );
+
+            border:
+                1px solid rgba(255,255,255,0.09);
+
+            backdrop-filter: blur(25px);
+
+            box-shadow:
+                0 15px 45px rgba(0,0,0,0.2);
+
+            transition:
+                0.3s ease;
+
+            overflow: hidden;
+        }
+
+        .test-card:hover {
+            transform: translateY(-6px);
+
+            border-color:
+                rgba(217,180,90,0.24);
+
+            box-shadow:
+                0 25px 60px rgba(0,0,0,0.35),
+                0 0 35px rgba(139,92,246,0.08);
+        }
+
+        .test-icon {
+            width: 48px;
+            height: 48px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 15px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(139,92,246,0.17),
+                    rgba(217,180,90,0.09)
+                );
+
+            border:
+                1px solid rgba(255,255,255,0.09);
+
+            font-size: 21px;
+
+            margin-bottom: 20px;
+        }
+
+        .test-card h3 {
+            font-size: 17px;
+
+            margin-bottom: 9px;
+        }
+
+        .test-card p {
+            color: var(--muted);
+
+            font-size: 13px;
+
+            line-height: 1.6;
+
+            min-height: 43px;
+        }
+
+        .test-bottom {
+            display: flex;
+
+            justify-content: space-between;
+            align-items: center;
+
+            margin-top: 20px;
+        }
+
+        .test-status {
+            color: var(--muted);
+
+            font-size: 11px;
+        }
+
+        .test-status.success {
+            color: var(--green);
+        }
+
+        .test-status.running {
+            color: var(--gold-light);
+        }
+
+        .small-button {
+            border: 1px solid var(--border);
+
+            background:
+                rgba(255,255,255,0.045);
+
+            color: var(--text);
+
+            padding: 8px 12px;
+
+            border-radius: 11px;
+
+            cursor: pointer;
+
+            font-size: 11px;
+
+            transition: 0.2s;
+        }
+
+        .small-button:hover {
+            background:
+                rgba(139,92,246,0.14);
+
+            border-color:
+                rgba(139,92,246,0.3);
+        }
+
+        /* =========================================================
+           FULL TEST
+        ========================================================= */
+
+        .full-test {
+            padding: 30px;
+
+            border-radius: 28px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(139,92,246,0.10),
+                    rgba(217,180,90,0.045),
+                    rgba(255,255,255,0.025)
+                );
+
+            border:
+                1px solid rgba(255,255,255,0.11);
+
+            backdrop-filter: blur(30px);
+
+            box-shadow:
+                var(--shadow);
+        }
+
+        .full-test-header {
+            display: flex;
+
+            justify-content: space-between;
+            align-items: center;
+
+            gap: 20px;
+
+            margin-bottom: 25px;
+        }
+
+        .full-test-title {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .full-test-title-icon {
+            width: 52px;
+            height: 52px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 17px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(217,180,90,0.18),
+                    rgba(139,92,246,0.16)
+                );
+
+            border:
+                1px solid rgba(255,255,255,0.12);
+
+            font-size: 23px;
+        }
+
+        .full-test h2 {
+            font-size: 21px;
+        }
+
+        .full-test small {
+            display: block;
+
+            color: var(--muted);
+
+            margin-top: 5px;
+        }
+
+        .run-all {
+            padding: 13px 18px;
+
+            border-radius: 13px;
+
+            border: 1px solid
+                rgba(217,180,90,0.35);
+
+            background:
+                rgba(217,180,90,0.08);
+
+            color: var(--gold-light);
+
+            cursor: pointer;
+
+            font-weight: 700;
+
+            transition: 0.25s;
+        }
+
+        .run-all:hover {
+            background:
+                rgba(217,180,90,0.14);
+
+            transform: translateY(-2px);
+        }
+
+        /* =========================================================
+           CAMERA
+        ========================================================= */
+
+        .camera-panel {
+            display: none;
+
+            margin-top: 20px;
+
+            padding: 20px;
+
+            border-radius: 20px;
+
+            background:
+                rgba(0,0,0,0.25);
+
+            border:
+                1px solid rgba(255,255,255,0.08);
+        }
+
+        .camera-panel.active {
+            display: block;
+        }
+
+        .camera-view {
+            width: 100%;
+
+            aspect-ratio: 16/9;
+
+            object-fit: cover;
+
+            border-radius: 17px;
+
+            background: #000;
+
+            border:
+                1px solid rgba(255,255,255,0.08);
+        }
+
+        .camera-controls {
+            display: flex;
+
+            gap: 10px;
+
+            margin-top: 13px;
+
+            flex-wrap: wrap;
+        }
+
+        /* =========================================================
+           MICROPHONE
+        ========================================================= */
+
+        .mic-panel {
+            display: none;
+
+            margin-top: 20px;
+
+            padding: 20px;
+
+            border-radius: 20px;
+
+            background:
+                rgba(0,0,0,0.25);
+
+            border:
+                1px solid rgba(255,255,255,0.08);
+        }
+
+        .mic-panel.active {
+            display: block;
+        }
+
+        .mic-level {
+            height: 80px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 3px;
+
+            overflow: hidden;
+
+            margin-bottom: 15px;
+        }
+
+        .mic-bar {
+            width: 5px;
+
+            height: 20%;
+
+            min-height: 4px;
+
+            border-radius: 10px;
+
+            background:
+                linear-gradient(
+                    to top,
+                    var(--purple),
+                    var(--gold)
+                );
+
+            transition:
+                height 0.08s;
+        }
+
+        /* =========================================================
+           COLOR TEST
+        ========================================================= */
+
+        .color-panel {
+            display: none;
+
+            margin-top: 20px;
+
+            padding: 20px;
+
+            border-radius: 20px;
+
+            background:
+                rgba(0,0,0,0.25);
+
+            border:
+                1px solid rgba(255,255,255,0.08);
+        }
+
+        .color-panel.active {
+            display: block;
+        }
+
+        .color-screen {
+            width: 100%;
+
+            height: 260px;
+
+            border-radius: 18px;
+
+            display: grid;
+
+            place-items: center;
+
+            color: white;
+
+            font-size: 22px;
+
+            font-weight: 800;
+
+            text-shadow:
+                0 2px 10px rgba(0,0,0,0.35);
+
+            transition:
+                background 0.3s;
+        }
+
+        /* =========================================================
+           KEYBOARD
+        ========================================================= */
+
+        .keyboard-panel {
+            display: none;
+
+            margin-top: 20px;
+
+            padding: 20px;
+
+            border-radius: 20px;
+
+            background:
+                rgba(0,0,0,0.25);
+
+            border:
+                1px solid rgba(255,255,255,0.08);
+        }
+
+        .keyboard-panel.active {
+            display: block;
+        }
+
+        .keyboard-input {
+            width: 100%;
+
+            padding: 16px;
+
+            border-radius: 14px;
+
+            border:
+                1px solid rgba(255,255,255,0.12);
+
+            background:
+                rgba(255,255,255,0.05);
+
+            color: white;
+
+            outline: none;
+        }
+
+        .keyboard-input:focus {
+            border-color:
+                rgba(139,92,246,0.5);
+        }
+
+        /* =========================================================
+           ACTIVITY
+        ========================================================= */
+
+        .activity {
+            margin-top: 20px;
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 13px;
+        }
+
+        .activity-item {
+            padding: 17px;
+
+            border-radius: 17px;
+
+            background:
+                rgba(255,255,255,0.035);
+
+            border:
+                1px solid rgba(255,255,255,0.07);
+        }
+
+        .activity-item span {
+            display: block;
+
+            color: var(--muted);
+
+            font-size: 11px;
+
+            margin-bottom: 7px;
+        }
+
+        .activity-item strong {
+            font-size: 14px;
+        }
+
+        /* =========================================================
+           FOOTER
+        ========================================================= */
+
+        footer {
+            border-top:
+                1px solid rgba(255,255,255,0.07);
+
+            padding:
+                35px 5%;
+
+            background:
+                rgba(0,0,0,0.18);
+
+            color: var(--muted);
+        }
+
+        .footer-inner {
+            width: min(1450px, 90%);
+
+            margin: auto;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            gap: 20px;
+
+            flex-wrap: wrap;
+
+            font-size: 13px;
+        }
+
+        /* =========================================================
+           TOAST
+        ========================================================= */
+
+        .toast {
+            position: fixed;
+
+            right: 25px;
+            bottom: 25px;
+
+            max-width: 320px;
+
+            padding: 15px 18px;
+
+            border-radius: 16px;
+
+            background:
+                rgba(15,12,23,0.94);
+
+            border:
+                1px solid rgba(255,255,255,0.12);
+
+            backdrop-filter: blur(25px);
+
+            box-shadow:
+                0 20px 50px rgba(0,0,0,0.5);
+
+            transform:
+                translateY(120px);
+
+            opacity: 0;
+
+            pointer-events: none;
+
+            transition: 0.3s;
+
+            z-index: 1000;
+
+            font-size: 13px;
+        }
+
+        .toast.show {
+            transform:
+                translateY(0);
+
+            opacity: 1;
+        }
+
+        /* =========================================================
+           RESPONSIVE
+        ========================================================= */
+
+        @media (max-width: 1100px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            .tests-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 700px) {
+            header {
+                padding:
+                    13px 4%;
+            }
+
+            main {
+                width: 92%;
+
+                padding-top: 45px;
+            }
+
+            h1 {
+                font-size: 45px;
+
+                letter-spacing: -2px;
+            }
+
+            .hero-text {
+                font-size: 15px;
+            }
+
+            .tests-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .activity {
+                grid-template-columns: 1fr;
+            }
+
+            .full-test-header {
+                align-items: flex-start;
+
+                flex-direction: column;
+            }
+
+            .status-grid {
+                grid-template-columns:
+                    repeat(3, 1fr);
+            }
+
+            .score-number {
+                font-size: 60px;
+            }
+
+            .language-menu {
+                right: -10px;
+            }
+        }
+    </style>
+<style>
+#dx{position:fixed;inset:0;z-index:5000;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:rgba(5,5,9,.96);color:#fff;text-align:center;padding:24px;touch-action:none;user-select:none}
+#dx h2{font-size:42px}#dx p,#dx table{font-size:16px;line-height:1.7;max-width:420px}#dx td{padding:3px 12px;text-align:start}
+#dx button{padding:14px 22px;border-radius:14px;border:1px solid #d9b45a;background:rgba(217,180,90,.12);color:#ffe7a0;font-weight:700;font-size:16px;margin:4px}
+.lv{width:80%;height:14px;background:#ffffff22;border-radius:9px;overflow:hidden}.lv i{display:block;height:100%;width:0;background:linear-gradient(90deg,#8b5cf6,#d9b45a)}
+.tg{position:absolute;inset:56px 0 0 0;display:grid}.tg b{border:1px solid #ffffff22}.tg b.on{background:#4ade80}
+.tc{position:absolute;top:0;left:0;right:0;height:56px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:15px;z-index:2}.tc button{padding:6px 12px;font-size:14px}
+</style></head>
+
+<body>
+
+    <div class="orb one"></div>
+    <div class="orb two"></div>
+
+    <!-- =========================================================
+         HEADER
+    ========================================================= -->
+
+    <header>
+
+        <nav class="nav">
+
+            <div class="logo">
+
+                <div class="logo-icon">
+                    <span>◈</span>
+                </div>
+
+                <div class="logo-name">
+                    DeviceCare
+                </div>
+
+            </div>
+
+            <div class="nav-actions">
+
+                <div class="language-wrap">
+
+                    <button
+                        class="glass-button"
+                        id="languageButton"
+                    >
+                        🌐 <span id="currentLanguage">English</span>
+                        ▾
+                    </button>
+
+                    <div
+                        class="language-menu"
+                        id="languageMenu"
+                    >
+
+                        <button
+                            class="language-option"
+                            data-lang="fa"
+                        >
+                            🇮🇷 فارسی
+                        </button>
+
+                        <button
+                            class="language-option"
+                            data-lang="en"
+                        >
+                            🇺🇸 English
+                        </button>
+
+                        <button
+                            class="language-option"
+                            data-lang="de"
+                        >
+                            🇩🇪 Deutsch
+                        </button>
+
+                        <button
+                            class="language-option"
+                            data-lang="fr"
+                        >
+                            🇫🇷 Français
+                        </button>
+
+                        <button
+                            class="language-option"
+                            data-lang="es"
+                        >
+                            🇪🇸 Español
+                        </button>
+
+                        <button
+                            class="language-option"
+                            data-lang="ar"
+                        >
+                            🇸🇦 العربية
+                        </button>
+
+                        <button
+                            class="language-option"
+                            data-lang="zh"
+                        >
+                            🇨🇳 中文
+                        </button>
+
+                        <button
+                            class="language-option"
+                            data-lang="ja"
+                        >
+                            🇯🇵 日本語
+                        </button>
+
+                        <button
+                            class="language-option"
+                            data-lang="ko"
+                        >
+                            🇰🇷 한국어
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </nav>
+
+    </header>
+
+
+    <!-- =========================================================
+         MAIN
+    ========================================================= -->
+
+    <main>
+
+        <!-- HERO -->
+
+        <section class="hero">
+
+            <div class="hero-content">
+
+                <div class="eyebrow">
+                    <span class="eyebrow-dot"></span>
+                    <span data-i18n="online">System Ready</span>
+                </div>
+
+                <h1>
+                    <span data-i18n="hero1">
+                        Check Your
+                    </span>
+
+                    <br>
+
+                    <span class="gradient-title"
+                          data-i18n="hero2">
+                        Device Health
+                    </span>
+                </h1>
+
+                <p
+                    class="hero-text"
+                    data-i18n="heroText"
+                >
+                    Test your camera, microphone, speakers,
+                    display, keyboard and other device components
+                    with one beautiful diagnostic system.
+                </p>
+
+                <div class="hero-buttons">
+
+                    <button
+                        class="primary-button"
+                        id="runFullTest"
+                    >
+                        ✦
+                        <span data-i18n="startTest">
+                            Start Full Test
+                        </span>
+                    </button>
+
+                    <button
+                        class="glass-button"
+                        onclick="document.getElementById('tests').scrollIntoView()"
+                    >
+                        <span data-i18n="viewTests">
+                            View Tests
+                        </span>
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- STATUS -->
+
+            <div class="status-card">
+
+                <div class="status-top">
+
+                    <div>
+                        <div
+                            class="status-label"
+                            data-i18n="overallHealth"
+                        >
+                            Overall Device Health
+                        </div>
+                    </div>
+
+                    <div
+                        class="status-badge"
+                        id="overallBadge"
+                    >
+                        Ready
+                    </div>
+
+                </div>
+
+                <div class="score">
+
+                    <div
+                        class="score-number"
+                        id="score"
+                    >
+                        0
+                    </div>
+
+                    <div class="score-percent">
+                        %
+                    </div>
+
+                </div>
+
+                <div
+                    class="score-description"
+                    id="scoreDescription"
+                >
+                    Run the full diagnostic to check
+                    your device.
+                </div>
+
+                <div class="progress">
+
+                    <div
+                        class="progress-bar"
+                        id="progressBar"
+                    ></div>
+
+                </div>
+
+                <div class="status-grid">
+
+                    <div class="mini-status">
+                        <strong id="passedCount">0</strong>
+                        <span data-i18n="passed">Passed</span>
+                    </div>
+
+                    <div class="mini-status">
+                        <strong id="failedCount">0</strong>
+                        <span data-i18n="failed">Failed</span>
+                    </div>
+
+                    <div class="mini-status">
+                        <strong id="totalCount">7</strong>
+                        <span data-i18n="tests">Tests</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             FULL TEST
+        ===================================================== -->
+
+        <section>
+
+            <div class="section-heading">
+
+                <div>
+                    <h2 data-i18n="fullDiagnostic">
+                        Full Diagnostic
+                    </h2>
+                </div>
+
+                <p data-i18n="fullDiagnosticText">
+                    Run every available hardware check
+                    from one place.
+                </p>
+
+            </div>
+
+
+            <div class="full-test">
+
+                <div class="full-test-header">
+
+                    <div class="full-test-title">
+
+                        <div class="full-test-title-icon">
+                            ⚡
+                        </div>
+
+                        <div>
+
+                            <h2 data-i18n="oneClick">
+                                One-Click Device Test
+                            </h2>
+
+                            <small data-i18n="oneClickText">
+                                Camera → Microphone →
+                                Speaker → Display →
+                                Keyboard → Network
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                    <button
+                        class="run-all"
+                        id="runAllButton"
+                    >
+                        ▶
+                        <span data-i18n="runAll">
+                            Run All
+                        </span>
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             TESTS
+        ===================================================== -->
+
+        <section id="tests">
+
+            <div class="section-heading">
+
+                <div>
+                    <h2 data-i18n="individualTests">
+                        Individual Tests
+                    </h2>
+                </div>
+
+                <p data-i18n="individualTestsText">
+                    Test each component separately.
+                </p>
+
+            </div>
+
+
+            <div class="tests-grid">
+
+
+                <!-- CAMERA -->
+
+                <div class="test-card">
+
+                    <div class="test-icon">
+                        📷
+                    </div>
+
+                    <h3 data-i18n="camera">
+                        Camera
+                    </h3>
+
+                    <p data-i18n="cameraText">
+                        Check whether your camera
+                        is working correctly.
+                    </p>
+
+                    <div class="test-bottom">
+
+                        <span
+                            class="test-status"
+                            id="cameraStatus"
+                        >
+                            Not tested
+                        </span>
+
+                        <button
+                            class="small-button"
+                            onclick="startCameraTest()"
+                            data-i18n="test"
+                        >
+                            Test
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- MICROPHONE -->
+
+                <div class="test-card">
+
+                    <div class="test-icon">
+                        🎙️
+                    </div>
+
+                    <h3 data-i18n="microphone">
+                        Microphone
+                    </h3>
+
+                    <p data-i18n="microphoneText">
+                        Record your voice and play
+                        it back to check audio quality.
+                    </p>
+
+                    <div class="test-bottom">
+
+                        <span
+                            class="test-status"
+                            id="micStatus"
+                        >
+                            Not tested
+                        </span>
+
+                        <button
+                            class="small-button"
+                            onclick="startMicTest()"
+                            data-i18n="test"
+                        >
+                            Test
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- SPEAKER -->
+
+                <div class="test-card">
+
+                    <div class="test-icon">
+                        🔊
+                    </div>
+
+                    <h3 data-i18n="speaker">
+                        Speaker
+                    </h3>
+
+                    <p data-i18n="speakerText">
+                        Play a test tone to verify
+                        your speakers.
+                    </p>
+
+                    <div class="test-bottom">
+
+                        <span
+                            class="test-status"
+                            id="speakerStatus"
+                        >
+                            Not tested
+                        </span>
+
+                        <button
+                            class="small-button"
+                            onclick="testSpeaker()"
+                            data-i18n="test"
+                        >
+                            Test
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- DISPLAY -->
+
+                <div class="test-card">
+
+                    <div class="test-icon">
+                        🖥️
+                    </div>
+
+                    <h3 data-i18n="display">
+                        Display
+                    </h3>
+
+                    <p data-i18n="displayText">
+                        Show multiple colors to test
+                        your screen.
+                    </p>
+
+                    <div class="test-bottom">
+
+                        <span
+                            class="test-status"
+                            id="displayStatus"
+                        >
+                            Not tested
+                        </span>
+
+                        <button
+                            class="small-button"
+                            onclick="startDisplayTest()"
+                            data-i18n="test"
+                        >
+                            Test
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- BATTERY -->
+
+                <div class="test-card">
+
+                    <div class="test-icon">
+                        🔋
+                    </div>
+
+                    <h3 data-i18n="battery">
+                        Battery
+                    </h3>
+
+                    <p data-i18n="batteryText">
+                        Check available battery information
+                        provided by your browser.
+                    </p>
+
+                    <div class="test-bottom">
+
+                        <span
+                            class="test-status"
+                            id="batteryStatus"
+                        >
+                            Not tested
+                        </span>
+
+                        <button
+                            class="small-button"
+                            onclick="testBattery()"
+                            data-i18n="test"
+                        >
+                            Test
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- SYSTEM -->
+
+                <div class="test-card">
+
+                    <div class="test-icon">
+                        ⚙️
+                    </div>
+
+                    <h3 data-i18n="system">
+                        System
+                    </h3>
+
+                    <p data-i18n="systemText">
+                        Check basic browser and device
+                        information.
+                    </p>
+
+                    <div class="test-bottom">
+
+                        <span
+                            class="test-status"
+                            id="systemStatus"
+                        >
+                            Not tested
+                        </span>
+
+                        <button
+                            class="small-button"
+                            onclick="testSystem()"
+                            data-i18n="test"
+                        >
+                            Test
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 CAMERA PANEL
+            ================================================= -->
+
+            <div
+                class="camera-panel"
+                id="cameraPanel"
+            >
+
+                <video
+                    class="camera-view"
+                    id="cameraVideo"
+                    autoplay
+                    playsinline
+                    muted
+                ></video>
+
+                <div class="camera-controls">
+
+                    <button
+                        class="primary-button"
+                        onclick="stopCameraTest()"
+                    >
+                        ⏹
+                        <span data-i18n="stop">
+                            Stop
+                        </span>
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 MICROPHONE PANEL
+            ================================================= -->
+
+            <div
+                class="mic-panel"
+                id="micPanel"
+            >
+
+                <div
+                    class="mic-level"
+                    id="micLevel"
+                ></div>
+
+                <div class="camera-controls">
+
+                    <button
+                        class="primary-button"
+                        id="recordButton"
+                        onclick="recordMicrophone()"
+                    >
+                        ●
+                        <span data-i18n="record">
+                            Record
+                        </span>
+                    </button>
+
+                    <button
+                        class="glass-button"
+                        id="playRecordingButton"
+                        onclick="playRecording()"
+                        disabled
+                    >
+                        ▶
+                        <span data-i18n="play">
+                            Play
+                        </span>
+                    </button>
+
+                    <button
+                        class="glass-button"
+                        onclick="stopMicTest()"
+                    >
+                        ⏹
+                        <span data-i18n="stop">
+                            Stop
+                        </span>
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 DISPLAY PANEL
+            ================================================= -->
+
+          <div
+    class="color-panel"
+    id="colorPanel"
+>
+
+    <button
+        class="display-fullscreen-button"
+        id="displayFullscreenButton"
+        type="button"
+       
+        onclick="window.toggleDisplayFullscreen()"
+        
+        aria-label="Fullscreen"
+        title="Fullscreen"
+    >
+        ⛶
+    </button>
+
+    <div
+        class="color-screen"
+        id="colorScreen"
+    >
+        Display Test
+    </div>
+
+                <div class="camera-controls">
+
+                    <button
+                        class="glass-button"
+                        onclick="previousColor()"
+                    >
+                        ←
+                    </button>
+
+                    <button
+                        class="primary-button"
+                        onclick="nextColor()"
+                    >
+                        <span data-i18n="next">
+                            Next
+                        </span>
+                        →
+                    </button>
+
+                    <button
+                        class="glass-button"
+                        onclick="finishDisplayTest()"
+                    >
+                        ✓
+                        <span data-i18n="finish">
+                            Finish
+                        </span>
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <input id="keyboardInput" style="display:none">
+<!-- =================================================
+                 ACTIVITY
+            ================================================= -->
+
+            <div class="activity">
+
+                <div class="activity-item">
+
+                    <span data-i18n="browser">
+                        Browser
+                    </span>
+
+                    <strong id="browserInfo">
+                        Detecting...
+                    </strong>
+
+                </div>
+
+                <div class="activity-item">
+
+                    <span data-i18n="platform">
+                        Platform
+                    </span>
+
+                    <strong id="platformInfo">
+                        Detecting...
+                    </strong>
+
+                </div>
+
+                <div class="activity-item">
+
+                    <span data-i18n="screen">
+                        Screen
+                    </span>
+
+                    <strong id="screenInfo">
+                        Detecting...
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================================================
+         FOOTER
+    ========================================================= -->
+
+    <footer>
+
+        <div class="footer-inner">
+
+            <div>
+                © 2026 DeviceCare
+            </div>
+
+            <div data-i18n="footerText">
+                Professional browser-based device diagnostics.
+            </div>
+
+        </div>
+
+    </footer>
+
+
+    <!-- TOAST -->
+
+    <div
+        class="toast"
+        id="toast"
+    ></div>
+
+
+    <script>
+
+        /* =========================================================
+           TRANSLATIONS
+        ========================================================= */
+
+        const translations = {
+
+            en: {
+                online: "System Ready",
+                hero1: "Check Your",
+                hero2: "Device Health",
+                heroText:
+                    "Test your camera, microphone, speakers, display, keyboard and other device components with one beautiful diagnostic system.",
+                startTest: "Start Full Test",
+                viewTests: "View Tests",
+                overallHealth: "Overall Device Health",
+                passed: "Passed",
+                failed: "Failed",
+                tests: "Tests",
+                fullDiagnostic: "Full Diagnostic",
+                fullDiagnosticText:
+                    "Run every available hardware check from one place.",
+                oneClick: "One-Click Device Test",
+                oneClickText:
+                    "Camera → Microphone → Speaker → Display → Keyboard → Network",
+                runAll: "Run All",
+                individualTests: "Individual Tests",
+                individualTestsText:
+                    "Test each component separately.",
+                camera: "Camera",
+                cameraText:
+                    "Check whether your camera is working correctly.",
+                microphone: "Microphone",
+                microphoneText:
+                    "Record your voice and play it back to check audio quality.",
+                speaker: "Speaker",
+                speakerText:
+                    "Play a test tone to verify your speakers.",
+                display: "Display",
+                displayText:
+                    "Show multiple colors to test your screen.",
+                keyboard: "Keyboard",
+                keyboardText:
+                    "Check keyboard input and key response.",
+                network: "Network",
+                networkText:
+                    "Check whether your browser is connected to the internet.",
+                battery: "Battery",
+                batteryText:
+                    "Check available battery information provided by your browser.",
+                system: "System",
+                systemText:
+                    "Check basic browser and device information.",
+                test: "Test",
+                stop: "Stop",
+                record: "Record",
+                play: "Play",
+                next: "Next",
+                finish: "Finish",
+                keyboardInstruction:
+                    "Click inside the box and press different keys.",
+                browser: "Browser",
+                platform: "Platform",
+                screen: "Screen",
+                footerText:
+                    "Professional browser-based device diagnostics.",
+                ready: "Ready",
+                testing: "Testing...",
+                passedStatus: "Passed",
+                failedStatus: "Failed",
+                complete: "Complete"
+            },
+
+            fa: {
+                online: "سیستم آماده است",
+                hero1: "سلامت دستگاه",
+                hero2: "خودت را بررسی کن",
+                heroText:
+                    "دوربین، میکروفون، اسپیکر، صفحه‌نمایش، کیبورد و سایر بخش‌های دستگاهت را با یک سیستم حرفه‌ای بررسی کن.",
+                startTest: "شروع تست کامل",
+                viewTests: "مشاهده تست‌ها",
+                overallHealth: "سلامت کلی دستگاه",
+                passed: "موفق",
+                failed: "ناموفق",
+                tests: "تست‌ها",
+                fullDiagnostic: "تشخیص کامل",
+                fullDiagnosticText:
+                    "تمام تست‌های قابل انجام دستگاه را از یک مکان اجرا کن.",
+                oneClick: "تست دستگاه با یک کلیک",
+                oneClickText:
+                    "دوربین ← میکروفون ← اسپیکر ← نمایشگر ← کیبورد ← اینترنت",
+                runAll: "اجرای همه",
+                individualTests: "تست‌های جداگانه",
+                individualTestsText:
+                    "هر قسمت دستگاه را به‌صورت جداگانه تست کن.",
+                camera: "دوربین",
+                cameraText:
+                    "بررسی کن که دوربین دستگاه درست کار می‌کند یا نه.",
+                microphone: "میکروفون",
+                microphoneText:
+                    "صدایت را ضبط کن و دوباره پخش کن تا کیفیت میکروفون را بررسی کنی.",
+                speaker: "اسپیکر",
+                speakerText:
+                    "یک صدای آزمایشی پخش کن تا اسپیکر بررسی شود.",
+                display: "نمایشگر",
+                displayText:
+                    "رنگ‌های مختلف را نمایش بده تا صفحه را بررسی کنی.",
+                keyboard: "کیبورد",
+                keyboardText:
+                    "ورودی کیبورد و عملکرد کلیدها را بررسی کن.",
+                network: "اینترنت",
+                networkText:
+                    "بررسی کن که مرورگر به اینترنت متصل است یا نه.",
+                battery: "باتری",
+                batteryText:
+                    "اطلاعات باتری قابل دسترس توسط مرورگر را بررسی کن.",
+                system: "سیستم",
+                systemText:
+                    "اطلاعات پایه مرورگر و دستگاه را بررسی کن.",
+                test: "تست",
+                stop: "توقف",
+                record: "ضبط",
+                play: "پخش",
+                next: "بعدی",
+                finish: "تمام",
+                keyboardInstruction:
+                    "داخل کادر کلیک کن و کلیدهای مختلف کیبورد را فشار بده.",
+                browser: "مرورگر",
+                platform: "سیستم",
+                screen: "صفحه",
+                footerText:
+                    "سیستم حرفه‌ای بررسی دستگاه در مرورگر.",
+                ready: "آماده",
+                testing: "در حال تست...",
+                passedStatus: "موفق",
+                failedStatus: "ناموفق",
+                complete: "کامل شد"
+            },
+
+            de: {
+                online: "System bereit",
+                hero1: "Prüfe deinen",
+                hero2: "Gerätezustand",
+                heroText:
+                    "Teste Kamera, Mikrofon, Lautsprecher, Display, Tastatur und weitere Komponenten.",
+                startTest: "Vollständigen Test starten",
+                viewTests: "Tests anzeigen",
+                overallHealth: "Gerätezustand",
+                passed: "Bestanden",
+                failed: "Fehlgeschlagen",
+                tests: "Tests",
+                fullDiagnostic: "Vollständige Diagnose",
+                fullDiagnosticText:
+                    "Führe alle verfügbaren Hardwaretests aus.",
+                oneClick: "Gerätetest mit einem Klick",
+                oneClickText:
+                    "Kamera → Mikrofon → Lautsprecher → Display → Tastatur → Netzwerk",
+                runAll: "Alle starten",
+                individualTests: "Einzeltests",
+                individualTestsText:
+                    "Teste jede Komponente einzeln.",
+                camera: "Kamera",
+                cameraText:
+                    "Überprüfe deine Kamera.",
+                microphone: "Mikrofon",
+                microphoneText:
+                    "Nimm deine Stimme auf und spiele sie ab.",
+                speaker: "Lautsprecher",
+                speakerText:
+                    "Spiele einen Testton ab.",
+                display: "Display",
+                displayText:
+                    "Zeige verschiedene Farben.",
+                keyboard: "Tastatur",
+                keyboardText:
+                    "Teste Tastatureingaben.",
+                network: "Netzwerk",
+                networkText:
+                    "Prüfe deine Internetverbindung.",
+                battery: "Akku",
+                batteryText:
+                    "Prüfe verfügbare Akkuinformationen.",
+                system: "System",
+                systemText:
+                    "Prüfe grundlegende Geräteinformationen.",
+                test: "Test",
+                stop: "Stopp",
+                record: "Aufnehmen",
+                play: "Abspielen",
+                next: "Weiter",
+                finish: "Fertig",
+                keyboardInstruction:
+                    "Klicke in das Feld und drücke verschiedene Tasten.",
+                browser: "Browser",
+                platform: "Plattform",
+                screen: "Bildschirm",
+                footerText:
+                    "Professionelle browserbasierte Gerätediagnose.",
+                ready: "Bereit",
+                testing: "Wird getestet...",
+                passedStatus: "Bestanden",
+                failedStatus: "Fehlgeschlagen",
+                complete: "Fertig"
+            },
+
+            fr: {
+                online: "Système prêt",
+                hero1: "Vérifiez la",
+                hero2: "santé de votre appareil",
+                heroText:
+                    "Testez la caméra, le microphone, les haut-parleurs, l'écran et le clavier.",
+                startTest: "Démarrer le test complet",
+                viewTests: "Voir les tests",
+                overallHealth: "État général",
+                passed: "Réussi",
+                failed: "Échec",
+                tests: "Tests",
+                fullDiagnostic: "Diagnostic complet",
+                fullDiagnosticText:
+                    "Exécutez tous les tests disponibles.",
+                oneClick: "Test en un clic",
+                oneClickText:
+                    "Caméra → Microphone → Haut-parleur → Écran → Clavier → Réseau",
+                runAll: "Tout tester",
+                individualTests: "Tests individuels",
+                individualTestsText:
+                    "Testez chaque composant séparément.",
+                camera: "Caméra",
+                cameraText:
+                    "Vérifiez le fonctionnement de votre caméra.",
+                microphone: "Microphone",
+                microphoneText:
+                    "Enregistrez votre voix et écoutez-la.",
+                speaker: "Haut-parleur",
+                speakerText:
+                    "Lisez un son de test.",
+                display: "Écran",
+                displayText:
+                    "Affichez plusieurs couleurs.",
+                keyboard: "Clavier",
+                keyboardText:
+                    "Testez les touches du clavier.",
+                network: "Réseau",
+                networkText:
+                    "Vérifiez votre connexion Internet.",
+                battery: "Batterie",
+                batteryText:
+                    "Vérifiez les informations de batterie.",
+                system: "Système",
+                systemText:
+                    "Vérifiez les informations système.",
+                test: "Tester",
+                stop: "Arrêter",
+                record: "Enregistrer",
+                play: "Lire",
+                next: "Suivant",
+                finish: "Terminer",
+                keyboardInstruction:
+                    "Cliquez dans la zone et appuyez sur différentes touches.",
+                browser: "Navigateur",
+                platform: "Plateforme",
+                screen: "Écran",
+                footerText:
+                    "Diagnostic professionnel basé sur le navigateur.",
+                ready: "Prêt",
+                testing: "Test...",
+                passedStatus: "Réussi",
+                failedStatus: "Échec",
+                complete: "Terminé"
+            },
+
+            es: {
+                online: "Sistema listo",
+                hero1: "Comprueba la",
+                hero2: "salud de tu dispositivo",
+                heroText:
+                    "Prueba cámara, micrófono, altavoces, pantalla, teclado y otros componentes.",
+                startTest: "Iniciar prueba completa",
+                viewTests: "Ver pruebas",
+                overallHealth: "Estado general",
+                passed: "Correcto",
+                failed: "Fallido",
+                tests: "Pruebas",
+                fullDiagnostic: "Diagnóstico completo",
+                fullDiagnosticText:
+                    "Ejecuta todas las pruebas disponibles.",
+                oneClick: "Prueba con un clic",
+                oneClickText:
+                    "Cámara → Micrófono → Altavoz → Pantalla → Teclado → Red",
+                runAll: "Probar todo",
+                individualTests: "Pruebas individuales",
+                individualTestsText:
+                    "Prueba cada componente por separado.",
+                camera: "Cámara",
+                cameraText:
+                    "Comprueba si la cámara funciona correctamente.",
+                microphone: "Micrófono",
+                microphoneText:
+                    "Graba tu voz y reprodúcela.",
+                speaker: "Altavoz",
+                speakerText:
+                    "Reproduce un tono de prueba.",
+                display: "Pantalla",
+                displayText:
+                    "Muestra varios colores.",
+                keyboard: "Teclado",
+                keyboardText:
+                    "Comprueba las teclas.",
+                network: "Red",
+                networkText:
+                    "Comprueba tu conexión a Internet.",
+                battery: "Batería",
+                batteryText:
+                    "Comprueba la información de batería.",
+                system: "Sistema",
+                systemText:
+                    "Comprueba información básica del sistema.",
+                test: "Probar",
+                stop: "Detener",
+                record: "Grabar",
+                play: "Reproducir",
+                next: "Siguiente",
+                finish: "Finalizar",
+                keyboardInstruction:
+                    "Haz clic en el campo y pulsa diferentes teclas.",
+                browser: "Navegador",
+                platform: "Plataforma",
+                screen: "Pantalla",
+                footerText:
+                    "Diagnóstico profesional basado en navegador.",
+                ready: "Listo",
+                testing: "Probando...",
+                passedStatus: "Correcto",
+                failedStatus: "Fallido",
+                complete: "Completado"
+            },
+
+            ar: {
+                online: "النظام جاهز",
+                hero1: "افحص",
+                hero2: "صحة جهازك",
+                heroText:
+                    "اختبر الكاميرا والميكروفون ومكبرات الصوت والشاشة ولوحة المفاتيح.",
+                startTest: "بدء الاختبار الكامل",
+                viewTests: "عرض الاختبارات",
+                overallHealth: "الحالة العامة للجهاز",
+                passed: "ناجح",
+                failed: "فشل",
+                tests: "الاختبارات",
+                fullDiagnostic: "التشخيص الكامل",
+                fullDiagnosticText:
+                    "شغّل جميع اختبارات الأجهزة المتاحة.",
+                oneClick: "اختبار الجهاز بنقرة واحدة",
+                oneClickText:
+                    "الكاميرا ← الميكروفون ← السماعة ← الشاشة ← لوحة المفاتيح ← الشبكة",
+                runAll: "تشغيل الكل",
+                individualTests: "اختبارات فردية",
+                individualTestsText:
+                    "اختبر كل مكوّن بشكل منفصل.",
+                camera: "الكاميرا",
+                cameraText:
+                    "تحقق من عمل الكاميرا.",
+                microphone: "الميكروفون",
+                microphoneText:
+                    "سجل صوتك ثم قم بتشغيله.",
+                speaker: "مكبر الصوت",
+                speakerText:
+                    "شغل صوتاً تجريبياً.",
+                display: "الشاشة",
+                displayText:
+                    "اعرض ألواناً مختلفة لفحص الشاشة.",
+                keyboard: "لوحة المفاتيح",
+                keyboardText:
+                    "اختبر مفاتيح لوحة المفاتيح.",
+                network: "الشبكة",
+                networkText:
+                    "تحقق من اتصال الإنترنت.",
+                battery: "البطارية",
+                batteryText:
+                    "تحقق من معلومات البطارية المتاحة.",
+                system: "النظام",
+                systemText:
+                    "تحقق من معلومات النظام الأساسية.",
+                test: "اختبار",
+                stop: "إيقاف",
+                record: "تسجيل",
+                play: "تشغيل",
+                next: "التالي",
+                finish: "إنهاء",
+                keyboardInstruction:
+                    "اضغط داخل المربع ثم اضغط مفاتيح مختلفة.",
+                browser: "المتصفح",
+                platform: "المنصة",
+                screen: "الشاشة",
+                footerText:
+                    "تشخيص احترافي للأجهزة عبر المتصفح.",
+                ready: "جاهز",
+                testing: "جارٍ الاختبار...",
+                passedStatus: "ناجح",
+                failedStatus: "فشل",
+                complete: "مكتمل"
+            },
+
+            zh: {
+                online: "系统已准备",
+                hero1: "检查你的",
+                hero2: "设备健康",
+                heroText:
+                    "测试摄像头、麦克风、扬声器、显示屏和键盘。",
+                startTest: "开始完整测试",
+                viewTests: "查看测试",
+                overallHealth: "设备总体状态",
+                passed: "通过",
+                failed: "失败",
+                tests: "测试",
+                fullDiagnostic: "完整诊断",
+                fullDiagnosticText:
+                    "运行所有可用的设备测试。",
+                oneClick: "一键设备测试",
+                oneClickText:
+                    "摄像头 → 麦克风 → 扬声器 → 显示屏 → 键盘 → 网络",
+                runAll: "全部测试",
+                individualTests: "单项测试",
+                individualTestsText:
+                    "分别测试每个组件。",
+                camera: "摄像头",
+                cameraText:
+                    "检查摄像头是否正常工作。",
+                microphone: "麦克风",
+                microphoneText:
+                    "录制声音并播放检查质量。",
+                speaker: "扬声器",
+                speakerText:
+                    "播放测试声音。",
+                display: "显示屏",
+                displayText:
+                    "显示多种颜色检查屏幕。",
+                keyboard: "键盘",
+                keyboardText:
+                    "检查键盘输入。",
+                network: "网络",
+                networkText:
+                    "检查互联网连接。",
+                battery: "电池",
+                batteryText:
+                    "检查可用的电池信息。",
+                system: "系统",
+                systemText:
+                    "检查基本系统信息。",
+                test: "测试",
+                stop: "停止",
+                record: "录音",
+                play: "播放",
+                next: "下一步",
+                finish: "完成",
+                keyboardInstruction:
+                    "点击输入框并按下不同按键。",
+                browser: "浏览器",
+                platform: "平台",
+                screen: "屏幕",
+                footerText:
+                    "专业的浏览器设备诊断系统。",
+                ready: "准备就绪",
+                testing: "测试中...",
+                passedStatus: "通过",
+                failedStatus: "失败",
+                complete: "完成"
+            },
+
+            ja: {
+                online: "システム準備完了",
+                hero1: "デバイスの",
+                hero2: "状態をチェック",
+                heroText:
+                    "カメラ、マイク、スピーカー、画面、キーボードなどをテストできます。",
+                startTest: "完全テスト開始",
+                viewTests: "テストを見る",
+                overallHealth: "デバイス状態",
+                passed: "成功",
+                failed: "失敗",
+                tests: "テスト",
+                fullDiagnostic: "完全診断",
+                fullDiagnosticText:
+                    "利用可能なすべてのテストを実行します。",
+                oneClick: "ワンクリックテスト",
+                oneClickText:
+                    "カメラ → マイク → スピーカー → 画面 → キーボード → ネットワーク",
+                runAll: "すべて実行",
+                individualTests: "個別テスト",
+                individualTestsText:
+                    "各コンポーネントを個別にテストします。",
+                camera: "カメラ",
+                cameraText:
+                    "カメラが正常に動作するか確認します。",
+                microphone: "マイク",
+                microphoneText:
+                    "音声を録音して再生します。",
+                speaker: "スピーカー",
+                speakerText:
+                    "テスト音を再生します。",
+                display: "ディスプレイ",
+                displayText:
+                    "複数の色を表示します。",
+                keyboard: "キーボード",
+                keyboardText:
+                    "キーボード入力を確認します。",
+                network: "ネットワーク",
+                networkText:
+                    "インターネット接続を確認します。",
+                battery: "バッテリー",
+                batteryText:
+                    "利用可能なバッテリー情報を確認します。",
+                system: "システム",
+                systemText:
+                    "基本的なシステム情報を確認します。",
+                test: "テスト",
+                stop: "停止",
+                record: "録音",
+                play: "再生",
+                next: "次へ",
+                finish: "完了",
+                keyboardInstruction:
+                    "ボックスをクリックしてキーを押してください。",
+                browser: "ブラウザ",
+                platform: "プラットフォーム",
+                screen: "画面",
+                footerText:
+                    "ブラウザベースのプロフェッショナル診断。",
+                ready: "準備完了",
+                testing: "テスト中...",
+                passedStatus: "成功",
+                failedStatus: "失敗",
+                complete: "完了"
+            },
+
+            ko: {
+                online: "시스템 준비 완료",
+                hero1: "기기",
+                hero2: "상태 확인",
+                heroText:
+                    "카메라, 마이크, 스피커, 화면, 키보드 등을 테스트할 수 있습니다.",
+                startTest: "전체 테스트 시작",
+                viewTests: "테스트 보기",
+                overallHealth: "기기 상태",
+                passed: "통과",
+                failed: "실패",
+                tests: "테스트",
+                fullDiagnostic: "전체 진단",
+                fullDiagnosticText:
+                    "사용 가능한 모든 기기 테스트를 실행합니다.",
+                oneClick: "원클릭 기기 테스트",
+                oneClickText:
+                    "카메라 → 마이크 → 스피커 → 디스플레이 → 키보드 → 네트워크",
+                runAll: "전체 실행",
+                individualTests: "개별 테스트",
+                individualTestsText:
+                    "각 구성 요소를 개별적으로 테스트합니다.",
+                camera: "카메라",
+                cameraText:
+                    "카메라가 정상적으로 작동하는지 확인합니다.",
+                microphone: "마이크",
+                microphoneText:
+                    "음성을 녹음하고 재생합니다.",
+                speaker: "스피커",
+                speakerText:
+                    "테스트 음성을 재생합니다.",
+                display: "디스플레이",
+                displayText:
+                    "여러 색상을 표시하여 화면을 테스트합니다.",
+                keyboard: "키보드",
+                keyboardText:
+                    "키보드 입력을 확인합니다.",
+                network: "네트워크",
+                networkText:
+                    "인터넷 연결을 확인합니다.",
+                battery: "배터리",
+                batteryText:
+                    "사용 가능한 배터리 정보를 확인합니다.",
+                system: "시스템",
+                systemText:
+                    "기본 시스템 정보를 확인합니다.",
+                test: "테스트",
+                stop: "중지",
+                record: "녹음",
+                play: "재생",
+                next: "다음",
+                finish: "완료",
+                keyboardInstruction:
+                    "입력창을 클릭하고 여러 키를 눌러보세요.",
+                browser: "브라우저",
+                platform: "플랫폼",
+                screen: "화면",
+                footerText:
+                    "전문적인 브라우저 기반 기기 진단.",
+                ready: "준비",
+                testing: "테스트 중...",
+                passedStatus: "통과",
+                failedStatus: "실패",
+                complete: "완료"
+            }
+
+        };
+
+
+        /* =========================================================
+           LANGUAGE SYSTEM
+        ========================================================= */
+
+        let currentLang =
+            localStorage.getItem("devicecare-language") || "en";
+
+        const languageNames = {
+            fa: "فارسی",
+            en: "English",
+            de: "Deutsch",
+            fr: "Français",
+            es: "Español",
+            ar: "العربية",
+            zh: "中文",
+            ja: "日本語",
+            ko: "한국어"
+        };
+
+        function setLanguage(lang) {
+
+            if (!translations[lang]) {
+                lang = "en";
+            }
+
+            currentLang = lang;
+
+            localStorage.setItem(
+                "devicecare-language",
+                lang
+            );
+
+            document.documentElement.lang = lang;
+
+            if (
+                lang === "fa" ||
+                lang === "ar"
+            ) {
+                document.documentElement.dir = "rtl";
+            } else {
+                document.documentElement.dir = "ltr";
+            }
+
+            document
+                .querySelectorAll("[data-i18n]")
+                .forEach(element => {
+
+                    const key =
+                        element.getAttribute("data-i18n");
+
+                    if (
+                        translations[lang] &&
+                        translations[lang][key]
+                    ) {
+                        element.textContent =
+                            translations[lang][key];
+                    }
+
+                });
+
+            document.getElementById(
+                "currentLanguage"
+            ).textContent =
+                languageNames[lang];
+
+            document.getElementById(
+                "languageMenu"
+            ).classList.remove("show");
+        }
+
+
+        document
+            .querySelectorAll(".language-option")
+            .forEach(button => {
+
+                button.addEventListener(
+                    "click",
+                    () => {
+
+                        setLanguage(
+                            button.dataset.lang
+                        );
+
+                    }
+                );
+
+            });
+
+
+        document
+            .getElementById("languageButton")
+            .addEventListener(
+                "click",
+                event => {
+
+                    event.stopPropagation();
+
+                    document
+                        .getElementById("languageMenu")
+                        .classList.toggle("show");
+
+                }
+            );
+
+
+        document.addEventListener(
+            "click",
+            () => {
+
+                document
+                    .getElementById("languageMenu")
+                    .classList.remove("show");
+
+            }
+        );
+
+
+        /* =========================================================
+           GENERAL TEST SYSTEM
+        ========================================================= */
+
+        const testStates = {
+            camera: false,
+            microphone: false,
+            speaker: false,
+            display: false,
+            keyboard: false,
+            network: false,
+            battery: false,
+            system: false
+        };
+
+        const testCount = 8;
+
+        function setTestStatus(
+            name,
+            state
+        ) {
+
+            testStates[name] =
+                state === "passed";
+
+            const element =
+                document.getElementById(
+                    name + "Status"
+                );
+
+            if (!element) return;
+
+            if (state === "testing") {
+
+                element.textContent =
+                    translations[currentLang].testing;
+
+                element.className =
+                    "test-status running";
+
+            } else if (state === "passed") {
+
+                element.textContent =
+                    "✓ " +
+                    translations[currentLang].passedStatus;
+
+                element.className =
+                    "test-status success";
+
+            } else {
+
+                element.textContent =
+                    translations[currentLang].failedStatus;
+
+                element.className =
+                    "test-status";
+
+            }
+
+            updateScore();
+        }
+
+
+        function updateScore() {
+
+            const passed =
+                Object.values(testStates)
+                    .filter(Boolean)
+                    .length;
+
+            const score =
+                Math.round(
+                    (passed / testCount) * 100
+                );
+
+            document.getElementById(
+                "score"
+            ).textContent = score;
+
+            document.getElementById(
+                "passedCount"
+            ).textContent = passed;
+
+            document.getElementById(
+                "failedCount"
+            ).textContent =
+                0;
+
+            document.getElementById(
+                "progressBar"
+            ).style.width =
+                score + "%";
+
+            if (score === 100) {
+
+                document.getElementById(
+                    "overallBadge"
+                ).textContent =
+                    translations[currentLang].complete;
+
+                document.getElementById(
+                    "scoreDescription"
+                ).textContent =
+                    "✓ All available tests passed.";
+
+            } else if (score > 0) {
+
+                document.getElementById(
+                    "overallBadge"
+                ).textContent =
+                    translations[currentLang].testing;
+
+            }
+
+        }
+
+
+        function showToast(message) {
+
+            const toast =
+                document.getElementById("toast");
+
+            toast.textContent = message;
+
+            toast.classList.add("show");
+
+            setTimeout(() => {
+
+                toast.classList.remove("show");
+
+            }, 3000);
+
+        }
+
+
+        /* =========================================================
+           CAMERA
+        ========================================================= */
+
+        let cameraStream = null;
+
+        async function startCameraTest() {
+
+            setTestStatus(
+                "camera",
+                "testing"
+            );
+
+            const panel =
+                document.getElementById(
+                    "cameraPanel"
+                );
+
+            panel.classList.add("active");
+
+            try {
+
+                cameraStream =
+                    await navigator.mediaDevices
+                        .getUserMedia({
+                            video: true,
+                            audio: false
+                        });
+
+                const video =
+                    document.getElementById(
+                        "cameraVideo"
+                    );
+
+                video.srcObject =
+                    cameraStream;
+
+                setTestStatus(
+                    "camera",
+                    "passed"
+                );
+
+                showToast(
+                    "Camera is working."
+                );
+
+            } catch (error) {
+
+                setTestStatus(
+                    "camera",
+                    "failed"
+                );
+
+                showToast(
+                    "Camera permission was not granted."
+                );
+
+            }
+
+        }
+
+
+        function stopCameraTest() {
+
+            if (cameraStream) {
+
+                cameraStream
+                    .getTracks()
+                    .forEach(
+                        track =>
+                            track.stop()
+                    );
+
+                cameraStream = null;
+            }
+
+            document
+                .getElementById("cameraPanel")
+                .classList.remove("active");
+
+        }
+
+
+        /* =========================================================
+           MICROPHONE
+        ========================================================= */
+
+        let micStream = null;
+        let mediaRecorder = null;
+        let recordedChunks = [];
+        let recordedAudioURL = null;
+        let audioContext = null;
+        let analyser = null;
+        let animationFrame = null;
+
+
+        function createMicBars() {
+
+            const container =
+                document.getElementById(
+                    "micLevel"
+                );
+
+            container.innerHTML = "";
+
+            for (
+                let i = 0;
+                i < 55;
+                i++
+            ) {
+
+                const bar =
+                    document.createElement("div");
+
+                bar.className =
+                    "mic-bar";
+
+                container.appendChild(bar);
+
+            }
+
+        }
+
+
+        async function startMicTest() {
+
+            setTestStatus(
+                "microphone",
+                "testing"
+            );
+
+            document
+                .getElementById("micPanel")
+                .classList.add("active");
+
+            createMicBars();
+
+            try {
+
+                micStream =
+                    await navigator.mediaDevices
+                        .getUserMedia({
+                            audio: true
+                        });
+
+                audioContext =
+                    new (
+                        window.AudioContext ||
+                        window.webkitAudioContext
+                    )();
+
+                const source =
+                    audioContext
+                        .createMediaStreamSource(
+                            micStream
+                        );
+
+                analyser =
+                    audioContext
+                        .createAnalyser();
+
+                analyser.fftSize = 128;
+
+                source.connect(analyser);
+
+                drawMicLevel();
+
+                setTestStatus(
+                    "microphone",
+                    "passed"
+                );
+
+                showToast(
+                    "Microphone is ready."
+                );
+
+            } catch (error) {
+
+                setTestStatus(
+                    "microphone",
+                    "failed"
+                );
+
+                showToast(
+                    "Microphone permission was not granted."
+                );
+
+            }
+
+        }
+
+
+        function drawMicLevel() {
+
+            if (!analyser) return;
+
+            const data =
+                new Uint8Array(
+                    analyser.frequencyBinCount
+                );
+
+            analyser.getByteFrequencyData(
+                data
+            );
+
+            const bars =
+                document.querySelectorAll(
+                    ".mic-bar"
+                );
+
+            bars.forEach(
+                (bar, index) => {
+
+                    const value =
+                        data[index] || 0;
+
+                    const height =
+                        Math.max(
+                            5,
+                            value / 2
+                        );
+
+                    bar.style.height =
+                        height + "%";
+
+                }
+            );
+
+            animationFrame =
+                requestAnimationFrame(
+                    drawMicLevel
+                );
+
+        }
+
+
+        function recordMicrophone() {
+
+            if (!micStream) {
+
+                showToast(
+                    "Start the microphone test first."
+                );
+
+                return;
+            }
+
+            recordedChunks = [];
+
+            mediaRecorder =
+                new MediaRecorder(
+                    micStream
+                );
+
+            mediaRecorder.ondataavailable =
+                event => {
+
+                    if (
+                        event.data.size > 0
+                    ) {
+                        recordedChunks.push(
+                            event.data
+                        );
+                    }
+
+                };
+
+            mediaRecorder.onstop =
+                () => {
+
+                    const blob =
+                        new Blob(
+                            recordedChunks,
+                            {
+                                type:
+                                    "audio/webm"
+                            }
+                        );
+
+                    recordedAudioURL =
+                        URL.createObjectURL(
+                            blob
+                        );
+
+                    document.getElementById(
+                        "playRecordingButton"
+                    ).disabled = false;
+
+                    showToast(
+                        "Recording complete."
+                    );
+
+                };
+
+            mediaRecorder.start();
+
+            showToast(
+                "Recording for 8 seconds..."
+            );
+
+            setTimeout(() => {
+
+                if (
+                    mediaRecorder &&
+                    mediaRecorder.state ===
+                    "recording"
+                ) {
+
+                    mediaRecorder.stop();
+
+                }
+
+            }, 8000);
+
+        }
+
+
+        function playRecording() {
+
+            if (!recordedAudioURL) {
+                return;
+            }
+
+            const audio =
+                new Audio(
+                    recordedAudioURL
+                );
+
+            audio.play();
+
+        }
+
+
+        function stopMicTest() {
+
+            if (animationFrame) {
+
+                cancelAnimationFrame(
+                    animationFrame
+                );
+
+            }
+
+            if (micStream) {
+
+                micStream
+                    .getTracks()
+                    .forEach(
+                        track =>
+                            track.stop()
+                    );
+
+                micStream = null;
+
+            }
+
+            if (audioContext) {
+
+                audioContext.close();
+
+                audioContext = null;
+
+            }
+
+            document
+                .getElementById("micPanel")
+                .classList.remove("active");
+
+        }
+
+
+        /* =========================================================
+           SPEAKER
+        ========================================================= */
+
+        function testSpeaker() {
+
+            setTestStatus(
+                "speaker",
+                "testing"
+            );
+
+            try {
+
+                const AudioContext =
+                    window.AudioContext ||
+                    window.webkitAudioContext;
+
+                const context =
+                    new AudioContext();
+
+                const oscillator =
+                    context.createOscillator();
+
+                const gain =
+                    context.createGain();
+
+                oscillator.type =
+                    "sine";
+
+                oscillator.frequency.value =
+                    440;
+
+                gain.gain.value =
+                    0.08;
+
+                oscillator.connect(
+                    gain
+                );
+
+                gain.connect(
+                    context.destination
+                );
+
+                oscillator.start();
+
+                setTimeout(() => {
+
+                    oscillator.stop();
+
+                    context.close();
+
+                    setTestStatus(
+                        "speaker",
+                        "passed"
+                    );
+
+                    showToast(
+                        "Speaker test completed."
+                    );
+
+                }, 1800);
+
+            } catch (error) {
+
+                setTestStatus(
+                    "speaker",
+                    "failed"
+                );
+
+            }
+
+        }
+
+
+        /* =========================================================
+           DISPLAY
+        ========================================================= */
+
+        const displayColors = [
+            "#000000",
+            "#ffffff",
+            "#ff0000",
+            "#00ff00",
+            "#0000ff",
+            "#ffff00",
+            "#00ffff",
+            "#ff00ff",
+            "#808080"
+        ];
+
+        let colorIndex = 0;
+
+
+        function startDisplayTest() {
+
+            setTestStatus(
+                "display",
+                "testing"
+            );
+
+            document
+                .getElementById("colorPanel")
+                .classList.add("active");
+
+            colorIndex = 0;
+
+            updateColor();
+
+        }
+
+
+        function updateColor() {
+
+            const screen =
+                document.getElementById(
+                    "colorScreen"
+                );
+
+            screen.style.background =
+                displayColors[colorIndex];
+
+            const color =
+                displayColors[colorIndex];
+
+            if (
+                color === "#ffffff" ||
+                color === "#ffff00" ||
+                color === "#00ff00" ||
+                color === "#00ffff"
+            ) {
+
+                screen.style.color =
+                    "#111";
+
+            } else {
+
+                screen.style.color =
+                    "#fff";
+
+            }
+
+            screen.textContent =
+                `${colorIndex + 1} / ${displayColors.length}`;
+
+        }
+
+
+        function nextColor() {
+
+            colorIndex++;
+
+            if (
+                colorIndex >=
+                displayColors.length
+            ) {
+
+                colorIndex = 0;
+
+            }
+
+            updateColor();
+
+        }
+
+
+        function previousColor() {
+
+            colorIndex--;
+
+            if (colorIndex < 0) {
+
+                colorIndex =
+                    displayColors.length - 1;
+
+            }
+
+            updateColor();
+
+        }
+
+
+        function finishDisplayTest() {
+
+            setTestStatus(
+                "display",
+                "passed"
+            );
+
+            document
+                .getElementById("colorPanel")
+                .classList.remove("active");
+
+            showToast(
+                "Display test completed."
+            );
+
+        }
+
+
+        /* =========================================================
+           KEYBOARD
+        ========================================================= */
+
+        let keyboardKeysPressed = 0;
+
+        function startKeyboardTest() {
+
+            keyboardKeysPressed = 0;
+
+            setTestStatus(
+                "keyboard",
+                "testing"
+            );
+
+            document
+                .getElementById("keyboardPanel")
+                .classList.add("active");
+
+            document
+                .getElementById("keyboardInput")
+                .focus();
+
+        }
+
+
+        document
+            .getElementById("keyboardInput")
+            .addEventListener(
+                "keydown",
+                event => {
+
+                    keyboardKeysPressed++;
+
+                    if (
+                        keyboardKeysPressed >= 5
+                    ) {
+
+                        setTestStatus(
+                            "keyboard",
+                            "passed"
+                        );
+
+                    }
+
+                }
+            );
+
+
+        function finishKeyboardTest() {
+
+            if (
+                keyboardKeysPressed > 0
+            ) {
+
+                setTestStatus(
+                    "keyboard",
+                    "passed"
+                );
+
+            } else {
+
+                showToast(
+                    "Press at least one key first."
+                );
+
+                return;
+
+            }
+
+            document
+                .getElementById("keyboardPanel")
+                .classList.remove("active");
+
+        }
+
+
+        /* =========================================================
+           NETWORK
+        ========================================================= */
+
+        function testNetwork() {
+
+            setTestStatus(
+                "network",
+                "testing"
+            );
+
+            setTimeout(() => {
+
+                if (
+                    navigator.onLine
+                ) {
+
+                    setTestStatus(
+                        "network",
+                        "passed"
+                    );
+
+                    showToast(
+                        "Internet connection detected."
+                    );
+
+                } else {
+
+                    setTestStatus(
+                        "network",
+                        "failed"
+                    );
+
+                    showToast(
+                        "No internet connection."
+                    );
+
+                }
+
+            }, 700);
+
+        }
+
+
+        /* =========================================================
+           BATTERY
+        ========================================================= */
+
+        async function testBattery() {
+
+            setTestStatus(
+                "battery",
+                "testing"
+            );
+
+            try {
+
+                if (
+                    "getBattery"
+                    in navigator
+                ) {
+
+                    const battery =
+                        await navigator.getBattery();
+
+                    setTestStatus(
+                        "battery",
+                        "passed"
+                    );
+
+                    showToast(
+                        `Battery: ${Math.round(
+                            battery.level * 100
+                        )}%`
+                    );
+
+                } else {
+
+                    setTestStatus(
+                        "battery",
+                        "passed"
+                    );
+
+                    showToast(
+                        "Battery information is not exposed by this browser."
+                    );
+
+                }
+
+            } catch {
+
+                setTestStatus(
+                    "battery",
+                    "failed"
+                );
+
+            }
+
+        }
+
+
+        /* =========================================================
+           SYSTEM
+        ========================================================= */
+
+        function testSystem() {
+
+            setTestStatus(
+                "system",
+                "testing"
+            );
+
+            setTimeout(() => {
+
+                setTestStatus(
+                    "system",
+                    "passed"
+                );
+
+                showToast(
+                    "System information detected."
+                );
+
+            }, 600);
+
+        }
+
+
+        /* =========================================================
+           FULL TEST
+        ========================================================= */
+
+        async function runFullTest() {
+
+            document
+                .getElementById("tests")
+                .scrollIntoView({
+                    behavior: "smooth"
+                });
+
+            showToast(
+                "Starting full device diagnostic..."
+            );
+
+            await wait(900);
+
+            await startCameraTest();
+
+            await wait(1200);
+
+            stopCameraTest();
+
+            await wait(500);
+
+            await startMicTest();
+
+            await wait(1200);
+
+            stopMicTest();
+
+            await wait(500);
+
+            testSpeaker();
+
+            await wait(2200);
+
+            startDisplayTest();
+
+            await wait(1000);
+
+            finishDisplayTest();
+
+            await wait(500);
+
+            startKeyboardTest();
+
+            await wait(500);
+
+            finishKeyboardTest();
+
+            await wait(500);
+
+            testNetwork();
+
+            await wait(1000);
+
+            await testBattery();
+
+            await wait(500);
+
+            testSystem();
+
+            showToast(
+                "Full diagnostic completed."
+            );
+
+        }
+
+
+        function wait(ms) {
+
+            return new Promise(
+                resolve =>
+                    setTimeout(
+                        resolve,
+                        ms
+                    )
+            );
+
+        }
+
+
+        document
+            .getElementById("runFullTest")
+            .addEventListener(
+                "click",
+                runFullTest
+            );
+
+        document
+            .getElementById("runAllButton")
+            .addEventListener(
+                "click",
+                runFullTest
+            );
+
+
+        /* =========================================================
+           DEVICE INFORMATION
+        ========================================================= */
+
+        document.getElementById(
+            "browserInfo"
+        ).textContent =
+            navigator.userAgent
+                .split(" ")
+                .slice(-1)[0];
+
+        document.getElementById(
+            "platformInfo"
+        ).textContent =
+            navigator.platform || "Unknown";
+
+        document.getElementById(
+            "screenInfo"
+        ).textContent =
+            `${window.screen.width} × ${window.screen.height}`;
+
+
+
+            /* =========================================================
+   DISPLAY TEST — REAL FULLSCREEN
+========================================================= */
+
+window.toggleDisplayFullscreen = async function () {
+
+    const colorPanel =
+        document.getElementById("colorPanel");
+
+    if (!colorPanel) {
+
+        console.error(
+            "colorPanel not found!"
+        );
+
+        return;
+    }
+
+    try {
+
+        if (!document.fullscreenElement) {
+
+            await colorPanel.requestFullscreen();
+
+        } else {
+
+            await document.exitFullscreen();
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Display Fullscreen Error:",
+            error
+        );
+
+    }
+
+};
+        /* =========================================================
+           START
+        ========================================================= */
+
+        setLanguage(
+            currentLang
+        );
+
+    </script>
+
+<script>
+(()=>{
+const N=window.DeviceXNative,nat=(f,...a)=>{try{return N&&N[f]?N[f](...a):null}catch(e){return null}};
+const T={en:{touch:"Touch Screen",touchText:"Touch every square on the screen to check the touch panel.",heard:"Did you hear the rising tone?",heardVoice:"Your recording is playing. Did you hear your own voice clearly?",yes:"Yes",no:"No",speakNow:"Speak now (4 seconds)…",noSound:"No sound was picked up by the microphone.",noPerm:"Permission was not granted.",tapNext:"tap for next color",dead:"Any dead pixels, spots, lines or color problems?",good:"Screen is fine",bad:"There is a problem",fingers:"max fingers",noBat:"Battery information is not available.",ok:"OK",seeImage:"Do you see a clear live image from this camera?",tone:"Playing test tone… (turn the media volume up)",oneClickText:"Battery → Touch → Display → Speaker → Microphone → Camera → System",heroText:"Test your phone's battery, touch screen, display, speaker, microphone and camera with one diagnostic app."},
+fa:{touch:"تاچ",touchText:"روی همه خانه‌های صفحه لمس کن تا تاچ بررسی شود.",heard:"آیا صدای زیر شونده را شنیدی؟",heardVoice:"ضبط تو در حال پخش است. آیا صدای خودت را واضح شنیدی؟",yes:"بله",no:"نه",speakNow:"حالا صحبت کن (۴ ثانیه)…",noSound:"میکروفون هیچ صدایی دریافت نکرد.",noPerm:"دسترسی داده نشد.",tapNext:"برای رنگ بعدی لمس کن",dead:"پیکسل خراب، لکه، خط یا مشکل رنگی می‌بینی؟",good:"صفحه سالم است",bad:"مشکل دارد",fingers:"حداکثر انگشت",noBat:"اطلاعات باتری در دسترس نیست.",ok:"باشه",seeImage:"آیا تصویر زندهٔ واضحی از این دوربین می‌بینی؟",tone:"در حال پخش صدا… (صدای مدیا را زیاد کن)",oneClickText:"باتری ← تاچ ← نمایشگر ← اسپیکر ← میکروفون ← دوربین ← سیستم",heroText:"باتری، تاچ، صفحه‌نمایش، اسپیکر، میکروفون و دوربین گوشی‌ات را با یک اپ بررسی کن."}};
+for(const l in translations)Object.assign(translations[l],T[l]||T.en);
+const t=k=>(translations[currentLang]&&translations[currentLang][k])||T.en[k]||k;
+const ov=document.createElement('div');ov.id='dx';document.body.appendChild(ov);
+const show=x=>{ov.onclick=null;ov.style.background='';ov.innerHTML=x;ov.style.display='flex'};
+const hide=()=>{ov.style.display='none';ov.innerHTML='';ov.onclick=null;ov.style.background='';nat('setFullscreen',false)};
+const choose=(ic,msg,o)=>new Promise(r=>{show(`<h2>${ic}</h2><p>${msg}</p><div>${o.map((x,i)=>`<button data-i="${i}">${x[0]}</button>`).join('')}</div>`);ov.querySelectorAll('button').forEach(b=>b.onclick=()=>r(o[b.dataset.i][1]))});
+const yn=(ic,m)=>choose(ic,m,[[t('yes'),1],[t('no'),0]]);
+
+delete testStates.keyboard;delete testStates.network;
+const res={},ids={microphone:'micStatus'};
+window.setTestStatus=(n,s)=>{testStates[n]=s==='passed';res[n]=s;const e=document.getElementById(ids[n]||n+'Status');
+ if(e){const L=translations[currentLang];e.textContent=s==='testing'?L.testing:s==='passed'?'✓ '+L.passedStatus:L.failedStatus;e.className='test-status'+(s==='testing'?' running':s==='passed'?' success':'')}
+ updateScore()};
+window.updateScore=()=>{const tot=Object.keys(testStates).length,p=Object.values(res).filter(x=>x==='passed').length,f=Object.values(res).filter(x=>x==='failed').length,sc=Math.round(p/tot*100),g=i=>document.getElementById(i);
+ g('score').textContent=sc;g('passedCount').textContent=p;g('failedCount').textContent=f;g('totalCount').textContent=tot;g('progressBar').style.width=sc+'%';
+ g('overallBadge').textContent=p+f===tot?(f?translations[currentLang].failedStatus:translations[currentLang].complete):translations[currentLang].testing;
+ g('scoreDescription').textContent=p+f===tot?(f?'✕ '+f+' / '+tot:'✓ OK'):p+f+' / '+tot};
+
+window.testSpeaker=async()=>{setTestStatus('speaker','testing');
+ try{const C=new(window.AudioContext||window.webkitAudioContext)();await C.resume();show(`<h2>🔊</h2><p>${t('tone')}</p>`);
+  const o=C.createOscillator(),g=C.createGain();o.frequency.setValueAtTime(300,C.currentTime);o.frequency.linearRampToValueAtTime(1600,C.currentTime+2.5);g.gain.value=.5;o.connect(g);g.connect(C.destination);o.start();await wait(2600);o.stop();C.close()}
+ catch(e){hide();setTestStatus('speaker','failed');return false}
+ const ok=await yn('🔊',t('heard'));hide();setTestStatus('speaker',ok?'passed':'failed');return !!ok};
+
+window.startMicTest=async()=>{setTestStatus('microphone','testing');let st;
+ try{st=await navigator.mediaDevices.getUserMedia({audio:true})}catch(e){setTestStatus('microphone','failed');showToast(t('noPerm'));return false}
+ const C=new(window.AudioContext||window.webkitAudioContext)();await C.resume();const an=C.createAnalyser();an.fftSize=1024;C.createMediaStreamSource(st).connect(an);
+ const d=new Uint8Array(an.fftSize),ch=[];let peak=0;show(`<h2>🎙️</h2><p>${t('speakNow')}</p><div class="lv"><i id="dxl"></i></div>`);
+ const rec=new MediaRecorder(st);rec.ondataavailable=e=>e.data.size&&ch.push(e.data);rec.start();
+ for(const end=Date.now()+4000;Date.now()<end;){an.getByteTimeDomainData(d);let m=0;for(const v of d)m=Math.max(m,Math.abs(v-128));peak=Math.max(peak,m);const l=document.getElementById('dxl');if(l)l.style.width=Math.min(100,m*3)+'%';await wait(50)}
+ await new Promise(r=>{rec.onstop=r;rec.stop()});st.getTracks().forEach(x=>x.stop());C.close();
+ if(peak<6){hide();setTestStatus('microphone','failed');showToast(t('noSound'));return false}
+ const a=new Audio(URL.createObjectURL(new Blob(ch,{type:rec.mimeType})));a.play().catch(()=>{});
+ const ok=await yn('🎙️',t('heardVoice'));a.pause();hide();setTestStatus('microphone',ok?'passed':'failed');return !!ok};
+window.stopMicTest=()=>{};window.recordMicrophone=()=>{};
+
+window.startDisplayTest=async()=>{setTestStatus('display','testing');nat('setFullscreen',true);
+ const c=['#000','#fff','#f00','#0f0','#00f','#ff0','#0ff','#f0f','#808080'],dark=[0,2,4,7];
+ for(let i=0;i<c.length;i++){show(`<span style="color:${dark.includes(i)?'#fff':'#000'};opacity:.55">${i+1}/${c.length} — ${t('tapNext')}</span>`);ov.style.background=c[i];await new Promise(r=>{ov.onclick=r})}
+ hide();const ok=await choose('🖥️',t('dead'),[[t('good'),1],[t('bad'),0]]);hide();setTestStatus('display',ok?'passed':'failed');return !!ok};
+
+window.startTouchTest=()=>new Promise(res=>{setTestStatus('touch','testing');nat('setFullscreen',true);
+ const R=9,Cn=6,tot=R*Cn;show(`<div class="tg" style="grid-template-columns:repeat(${Cn},1fr);grid-template-rows:repeat(${R},1fr)">${'<b></b>'.repeat(tot)}</div><div class="tc"><span id="tn">0/${tot}</span> · ${t('fingers')}: <span id="tm">0</span> <button id="tx">✕</button></div>`);
+ const g=ov.querySelector('.tg'),act=new Set();let n=0,mx=0;
+ const fin=ok=>{hide();setTestStatus('touch',ok?'passed':'failed');res(ok)};
+ const hit=e=>{const x=document.elementFromPoint(e.clientX,e.clientY);if(x&&x.tagName==='B'&&!x.classList.contains('on')){x.classList.add('on');n++;document.getElementById('tn').textContent=n+'/'+tot;if(n===tot)fin(true)}};
+ g.onpointerdown=e=>{act.add(e.pointerId);mx=Math.max(mx,act.size);document.getElementById('tm').textContent=mx;hit(e)};
+ g.onpointermove=hit;g.onpointerup=g.onpointercancel=e=>act.delete(e.pointerId);
+ document.getElementById('tx').onclick=()=>fin(false)});
+
+window.testBattery=async()=>{setTestStatus('battery','testing');let b=null;
+ try{const s=nat('getBattery');if(s)b=JSON.parse(s);else if(navigator.getBattery){const x=await navigator.getBattery();b={level:Math.round(x.level*100),charging:x.charging}}}catch(e){}
+ if(!b||b.level==null){setTestStatus('battery','failed');showToast(t('noBat'));return false}
+ const rows=Object.entries(b).filter(([k,v])=>v!==''&&v!=null).map(([k,v])=>`<tr><td>${k}</td><td><b>${v}</b></td></tr>`).join('');
+ const bad=b.health&&!/good/i.test(b.health)&&!/unknown/i.test(b.health);
+ await choose('🔋',`<table>${rows}</table>`,[[t('ok'),1]]);hide();setTestStatus('battery',bad?'failed':'passed');return !bad};
+
+
+window.startCameraTest=async()=>{setTestStatus('camera','testing');let opened=0,bad=0;
+ const tryMode=async c=>{let st;try{st=await navigator.mediaDevices.getUserMedia({video:c,audio:false})}catch(e){return e.name==='NotAllowedError'?'denied':'skip'}
+  show(`<video id="dxv" autoplay playsinline muted style="width:90%;max-height:55%;border-radius:14px;background:#000"></video><p>${t('seeImage')}</p><div><button id="dxy">${t('yes')}</button><button id="dxn">${t('no')}</button></div>`);
+  const v=document.getElementById('dxv');v.srcObject=st;for(let i=0;i<40&&!v.videoWidth;i++)await wait(100);
+  const live=v.videoWidth>0;const ok=live&&await new Promise(r=>{document.getElementById('dxy').onclick=()=>r(1);document.getElementById('dxn').onclick=()=>r(0)});
+  st.getTracks().forEach(x=>x.stop());hide();return ok?'ok':'bad'};
+ for(const m of ['environment','user']){const r=await tryMode({facingMode:{exact:m}});if(r==='denied'){setTestStatus('camera','failed');showToast(t('noPerm'));return false}if(r==='ok')opened++;if(r==='bad')bad++}
+ if(!opened&&!bad){const r=await tryMode(true);if(r==='ok')opened++;else bad++}
+ const ok=opened>0&&!bad;setTestStatus('camera',ok?'passed':'failed');return ok};
+window.stopCameraTest=()=>{};
+window.testSystem=async()=>{setTestStatus('system','testing');const n=navigator,ua=n.userAgent,
+ i={Model:(ua.match(/Android[^;)]*;\s*([^)]*)\)/)||[])[1]||n.platform,Android:(ua.match(/Android ([\d.]+)/)||[])[1]||'-',Screen:screen.width+'×'+screen.height+' @'+devicePixelRatio+'x',CPU:n.hardwareConcurrency||'-',RAM:n.deviceMemory?n.deviceMemory+'+ GB':'-',Touch:n.maxTouchPoints,Language:n.language};
+ await choose('⚙️',`<table>${Object.entries(i).map(([k,v])=>`<tr><td>${k}</td><td><b>${v}</b></td></tr>`).join('')}</table>`,[[t('ok'),1]]);hide();
+ const ok=screen.width>0&&i.CPU!=='-';setTestStatus('system',ok?'passed':'failed');return ok};
+const card=document.createElement('div');card.className='test-card';
+card.innerHTML=`<div class="test-icon">👆</div><h3 data-i18n="touch"></h3><p data-i18n="touchText"></p><div class="test-bottom"><span class="test-status" id="touchStatus">Not tested</span><button class="small-button" onclick="startTouchTest()" data-i18n="test">Test</button></div>`;
+document.querySelector('.tests-grid').appendChild(card);testStates.touch=false;
+
+async function runAll(){showToast('…');
+ const steps=[testBattery,startTouchTest,startDisplayTest,testSpeaker,startMicTest,startCameraTest,()=>{testSystem();return wait(700)}];
+ for(const s of steps){try{await s()}catch(e){console.error(e)}await wait(300)}
+ updateScore();showToast(translations[currentLang].complete)}
+['runFullTest','runAllButton'].forEach(i=>{const b=document.getElementById(i),c=b.cloneNode(true);b.replaceWith(c);c.onclick=runAll});
+setLanguage(currentLang);updateScore();
+})();
+</script>
+</body>
+</html>
